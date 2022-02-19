@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>
 #
-# MasterWord
+# Core
 # C : 2022/02/15
 # M : 2022/02/19
 # D : Core functions.
@@ -28,6 +28,7 @@
 
 CONFIG_DIR="/home/${USER}/.config/masterword"
 DICT="/usr/share/dict/words"
+[[ $LANG =~ (.._..)\.+ ]] && LANGUAGE="${BASH_REMATCH[1],,}"
 
 [[ -d $CONFIG_DIR ]] || {
   mkdir "$CONFIG_DIR"
@@ -96,12 +97,11 @@ reset_letters() {
 do_wordlist() {
   # crée la liste de mots initiale.
   local FILE WORD
-  local lng regex
+  local regex
   # alnum, alpha, ascii, blank, cntrl, digit, graph, lower, print, punct, space, upper, word, xdigit
   regex="[\'[[:space:]][[:cntrl:]][[:punct:]][[:blank:]][[:digit:]][[:xdigit:]]]"
-  [[ $LANG =~ (.._..)\.+ ]] && lng="${BASH_REMATCH[1],,}"
-  if [[ -s "${CONFIG_DIR}/${lng}_wordlist" ]]; then
-    FILE="${CONFIG_DIR}/${lng}_wordlist"
+  if [[ -s "${CONFIG_DIR}/${LANGUAGE}_wordlist" ]]; then
+    FILE="${CONFIG_DIR}/${LANGUAGE}_wordlist"
     echo "---- Loading word list..."
   else
     FILE="$DICT"
@@ -111,7 +111,7 @@ do_wordlist() {
     (( ${#WORD} == 5 )) && ! [[ $WORD =~ $regex ]] && {
       if [[ $FILE == "$DICT" ]]; then
         WORD="$(replace_chars "${WORD^^}")"
-        echo "$WORD" >> "${CONFIG_DIR}/${lng}_wordlist"
+        echo "$WORD" >> "${CONFIG_DIR}/${LANGUAGE}_wordlist"
       fi
       WORDLIST+=("$WORD")
     }
@@ -224,7 +224,7 @@ load_stats() {
         v="${BASH_REMATCH[2]}"
         ((STATS[$k]="$v"))
       }
-    done < "${CONFIG_DIR}/stats"
+    done < "${CONFIG_DIR}/${LANGUAGE}_stats"
   }
 }
 
@@ -239,5 +239,5 @@ save_stats() {
     echo "4=${STATS["4"]}"
     echo "5=${STATS["5"]}"
     echo "6=${STATS["6"]}"
-  } > "${CONFIG_DIR}/stats"
+  } > "${CONFIG_DIR}/${LANGUAGE}_stats"
 }
