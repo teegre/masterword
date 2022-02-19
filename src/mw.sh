@@ -24,10 +24,10 @@
 # M : 2022/02/19
 # D : Main program
 
-# shellcheck source=/home/tigerlost/projets/masterword/src/lib/core.sh
-source "/home/tigerlost/projets/masterword/src/lib/core.sh"
-# shellcheck source=/home/tigerlost/projets/masterword/src/lib/curse.sh
-source "/home/tigerlost/projets/masterword/src/lib/curse.sh"
+# shellcheck source=/usr/lib/masterword/core.sh
+source "/usr/lib/masterword/core.sh"
+# shellcheck source=/usr/lib/masterword/curse.sh
+source "/usr/lib/masterword/curse.sh"
 
 clear
 
@@ -46,19 +46,8 @@ CONTINUE=1
 while [[ $CONTINUE ]]; do
   clear
 
-  echo ' __  __   ____    ____  _____  ____ _____  '
-  echo '|  \/  | / () \  (_ (_`|_   _|| ===|| () ) '
-  echo '|_|\/|_|/__/\__\.__)__)  |_|  |____||_|\_\ '
-  echo '__    __ ____ _____  ____  '
-  echo '\ \/\/ // () \| () )| _) \ '
-  echo ' \_/\_/ \____/|_|\_\|____/ ver. 0.1'
-  echo
-  echo "---- Games: ${STATS["G"]} | Victories: ${STATS["W"]} | Defeats: ${STATS["L"]}"
-  echo -n "---- "
-  for ((i=1;i<7;i++)); do
-    echo -n "${i}: ${STATS[$i]} | "
-  done
-  echo
+  echo '  ,____,  __,   ,   -/- _   ,_      ,_ _,_ ,_   __/  '
+  echo '_/ / / (_(_/(__/_)__/__(/__/ (__/_/_/_(_/_/ (__(_/(_ '
   echo
   echo -e "---- ${GRN} A ${OFF} → 👍"
   echo -e "---- ${YLW} A ${OFF} → 🤔"
@@ -89,8 +78,6 @@ while [[ $CONTINUE ]]; do
     proceed_word "$entry" && {
       echo -n "---- VICTORY in $TRIAL moves."; clrtoeol
       echo
-      echo "${GUESS[@]}" >> game.txt
-      echo -e "******" >> game.txt
       confirm "Continue?" || unset CONTINUE
       ((STATS["$TRIAL"]+=1))
       ((STATS["G"]+=1))
@@ -105,7 +92,6 @@ while [[ $CONTINUE ]]; do
     echo
     echo "---- You lose..."
     echo "${GUESS[@]}" >> game.txt
-    echo -e "xx $SECRET\n******" >> game.txt
     confirm "Continue?" || unset CONTINUE
     ((STATS["G"]+=1))
     ((STATS["L"]+=1))
