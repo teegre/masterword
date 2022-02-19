@@ -25,7 +25,11 @@
 # M : 2022/02/18
 # D : Core functions.
 
+
+CONFIG_DIR="/home/${USER}/.config/masterword"
 DICT="/usr/share/dict/words"
+
+[[ -d $CONFIG_DIR ]] || mkdir "$CONFIG_DIR"
 
 declare -a WORDLIST
 declare -A SPECIAL
@@ -89,11 +93,12 @@ reset_letters() {
 do_wordlist() {
   # crée la liste de mots initiale.
   local FILE WORD
-  local regex
+  local lng regex
   # alnum, alpha, ascii, blank, cntrl, digit, graph, lower, print, punct, space, upper, word, xdigit
   regex="[\'[[:space:]][[:cntrl:]][[:punct:]][[:blank:]][[:digit:]][[:xdigit:]]]"
-  if [[ -s "./wordlist" ]]; then
-    FILE="./wordlist"
+  [[ $LANG =~ (.._..)\.+ ]] && lng="${BASH_REMATCH[1],,}"
+  if [[ -s "${CONFIG_DIR}/${lng}_wordlist" ]]; then
+    FILE="${CONFIG_DIR}/${lng}_wordlist"
     echo "---- Loading word list..."
   else
     FILE="$DICT"
@@ -103,7 +108,7 @@ do_wordlist() {
     (( ${#WORD} == 5 )) && ! [[ $WORD =~ $regex ]] && {
       if [[ $FILE == "$DICT" ]]; then
         WORD="$(replace_chars "${WORD^^}")"
-        echo "$WORD" >> "./wordlist"
+        echo "$WORD" >> "${CONFIG_DIR}/${lng}_wordlist"
       fi
       WORDLIST+=("$WORD")
     }
@@ -209,14 +214,14 @@ confirm() {
 
 load_stats() {
   local l k v
-  [[ -s "./stats" ]] && {
+  [[ -s "${CONFIG_DIR}/stats" ]] && {
     while read -r l; do
       [[ $l =~ (.)\=(.+) ]] && {
         k="${BASH_REMATCH[1]}"
         v="${BASH_REMATCH[2]}"
         ((STATS[$k]="$v"))
       }
-    done < "./stats"
+    done < "${CONFIG_DIR}/stats"
   }
 }
 
@@ -231,5 +236,5 @@ save_stats() {
     echo "4=${STATS["4"]}"
     echo "5=${STATS["5"]}"
     echo "6=${STATS["6"]}"
-  } > "./stats"
+  } > "${CONFIG_DIR}/stats"
 }

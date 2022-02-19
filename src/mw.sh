@@ -21,7 +21,7 @@
 #
 # MasterWord
 # C : 2022/02/14
-# M : 2022/02/18
+# M : 2022/02/19
 # D : Main program
 
 # shellcheck source=/home/tigerlost/projets/masterword/src/lib/core.sh
