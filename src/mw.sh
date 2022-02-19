@@ -57,7 +57,6 @@ while [[ $CONTINUE ]]; do
   SECRET="${WORDLIST[((RANDOM%COUNT))]}"
   TRIAL=1
   reset_letters
-  unset GUESS
   while ((TRIAL<7)); do
     savecursor
     clrtoeol
@@ -74,7 +73,6 @@ while [[ $CONTINUE ]]; do
       read -re -p "$((TRIAL))/6> " entry
       [[ $entry ]] || { restorecursor; continue; }
     done
-    GUESS+=("${entry^^}")
     proceed_word "$entry" && {
       echo -n "---- VICTORY in $TRIAL moves."; clrtoeol
       echo
@@ -91,7 +89,6 @@ while [[ $CONTINUE ]]; do
     echo -n "---- $SECRET"; clrtoeol
     echo
     echo "---- You lose..."
-    echo "${GUESS[@]}" >> game.txt
     confirm "Continue?" || unset CONTINUE
     ((STATS["G"]+=1))
     ((STATS["L"]+=1))
