@@ -22,14 +22,17 @@
 #
 # MasterWord
 # C : 2022/02/15
-# M : 2022/02/18
+# M : 2022/02/19
 # D : Core functions.
 
 
 CONFIG_DIR="/home/${USER}/.config/masterword"
 DICT="/usr/share/dict/words"
 
-[[ -d $CONFIG_DIR ]] || mkdir "$CONFIG_DIR"
+[[ -d $CONFIG_DIR ]] || {
+  mkdir "$CONFIG_DIR"
+  cp /etc/masterword/fr_fr_wordlist "${CONFIG_DIR}"/ 2> /dev/null
+}
 
 declare -a WORDLIST
 declare -A SPECIAL
