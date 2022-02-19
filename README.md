@@ -6,6 +6,10 @@
 A list of words taken from *Le Littré* dictionary is provided for French language.  
 For other languages, **MasterWord** creates a wordlist based on the default system dictionary located in `/usr/share/dict/words`.
 
+## Dependencies
+
+Latest version of: bash, coreutils
+
 ## Install
 
 ```
