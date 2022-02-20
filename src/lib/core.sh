@@ -38,7 +38,6 @@ DICT="/usr/share/dict/words"
 declare -a WORDLIST
 declare -A SPECIAL
 declare -A LETTERS
-declare -a GUESS; export GUESS
 declare -A POOL
 declare -A STATS
 
