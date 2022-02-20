@@ -46,8 +46,13 @@ CONTINUE=1
 while [[ $CONTINUE ]]; do
   clear
 
-  echo '  ,____,  __,   ,   -/- _   ,_      ,_ _,_ ,_   __/  '
-  echo '_/ / / (_(_/(__/_)__/__(/__/ (__/_/_/_(_/_/ (__(_/(_ '
+  L="${LANG:0:2}"
+  L="${L^^}"
+  echo '|\/| _. __|_ _ ._ \    /_ .__|'
+  echo "|  |(_|_> |_(/_|   \/\/(_)|(_| $L"
+  unset L
+  echo
+  print_stats
   echo
   echo -e "---- ${GRN} A ${OFF} → 👍"
   echo -e "---- ${YLW} A ${OFF} → 🤔"
