@@ -216,7 +216,7 @@ confirm() {
 
 load_stats() {
   local l k v
-  [[ -s "${CONFIG_DIR}/stats" ]] && {
+  [[ -s "${CONFIG_DIR}/${LANGUAGE}_stats" ]] && {
     while read -r l; do
       [[ $l =~ (.)\=(.+) ]] && {
         k="${BASH_REMATCH[1]}"
@@ -239,4 +239,19 @@ save_stats() {
     echo "5=${STATS["5"]}"
     echo "6=${STATS["6"]}"
   } > "${CONFIG_DIR}/${LANGUAGE}_stats"
+}
+
+print_stats() {
+  echo -n  "---- "
+  echo -en "${YLW} G ${OFF} → ${STATS[G]:-0} | "
+  echo -en "${GRN} V ${OFF} → ${STATS[W]:-0} | "
+  echo -e  "${DIM} D ${OFF} → ${STATS[L]:-0}"
+  echo -n  "---- "
+  echo -en " 1  → ${STATS[1]:-0} | "
+  echo -en " 2  → ${STATS[2]:-0} | "
+  echo -e  " 3  → ${STATS[3]:-0}"
+  echo -n  "---- "
+  echo -en " 4  → ${STATS[4]:-0} | "
+  echo -en " 5  → ${STATS[5]:-0} | "
+  echo -e  " 6  → ${STATS[6]:-0}"
 }
