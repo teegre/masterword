@@ -22,7 +22,7 @@
 #
 # Core
 # C : 2022/02/15
-# M : 2022/02/19
+# M : 2022/02/20
 # D : Core functions.
 
 
@@ -97,14 +97,13 @@ do_wordlist() {
   # crée la liste de mots initiale.
   local FILE WORD
   local regex
-  # alnum, alpha, ascii, blank, cntrl, digit, graph, lower, print, punct, space, upper, word, xdigit
   regex="[\'[[:space:]][[:cntrl:]][[:punct:]][[:blank:]][[:digit:]][[:xdigit:]]]"
   if [[ -s "${CONFIG_DIR}/${LANGUAGE}_wordlist" ]]; then
     FILE="${CONFIG_DIR}/${LANGUAGE}_wordlist"
-    echo "---- Loading word list..."
+    echo " Loading word list..."
   else
     FILE="$DICT"
-    echo "---- Creating word list..."
+    echo " Creating word list..."
   fi
   while read -r WORD; do
     (( ${#WORD} == 5 )) && ! [[ $WORD =~ $regex ]] && {
@@ -115,7 +114,7 @@ do_wordlist() {
       WORDLIST+=("$WORD")
     }
   done < "$FILE"
-  echo "---- Done."
+  echo " Done."
 }
 
 reset_pool() {
@@ -167,13 +166,11 @@ proceed_word() {
   local ENTRY i letter w
   ENTRY="${1^^}"
 
-  # [[ $ENTRY == "$SECRET" ]] && return 0
-
   count_letters "$ENTRY"
   
   restorecursor; clrtoeol
 
-  echo -n "---- "
+  echo -n "    → "
 
   for ((i=0;i<${#SECRET};i++)); do
     letter="${ENTRY:$i:1}"
@@ -188,6 +185,8 @@ proceed_word() {
     fi
   done
 
+  [[ $ENTRY == "$SECRET" ]] && { echo; return 0; }
+
   echo -n " | "
 
   for key in "${!LETTERS[@]}"; do
@@ -198,7 +197,6 @@ proceed_word() {
     echo -n "$w"
   done
   echo
-  [[ $ENTRY == "$SECRET" ]] && return 0
   return 1
 }
 
@@ -208,7 +206,7 @@ confirm() {
   local prompt r
   prompt="${1:-"sure?"}"
 
-  printf ".... %s [Y/n]: " "$prompt"
+  printf "%s [Y/n]: " "$prompt"
   read -r r
   [[ ${r,,} == "n" ]] && return 1
   return 0
@@ -242,16 +240,13 @@ save_stats() {
 }
 
 print_stats() {
-  echo -n  "---- "
-  echo -en "${YLW} G ${OFF} → ${STATS[G]:-0} | "
-  echo -en "${GRN} V ${OFF} → ${STATS[W]:-0} | "
-  echo -e  "${DIM} D ${OFF} → ${STATS[L]:-0}"
-  echo -n  "---- "
-  echo -en " 1  → ${STATS[1]:-0} | "
-  echo -en " 2  → ${STATS[2]:-0} | "
-  echo -e  " 3  → ${STATS[3]:-0}"
-  echo -n  "---- "
-  echo -en " 4  → ${STATS[4]:-0} | "
-  echo -en " 5  → ${STATS[5]:-0} | "
-  echo -e  " 6  → ${STATS[6]:-0}"
+  printf ' %b G %b → %-4d │ ' "${YLW}" "${OFF}" "${STATS[G]:-0}"
+  printf ' %b V %b → %-4d │ ' "${GRN}" "${OFF}" "${STATS[W]:-0}"
+  printf ' %b D %b → %-4d \n' "${DIM}" "${OFF}" "${STATS[L]:-0}"
+  printf '  1  → %-4d │ ' "${STATS[1]:-0}"
+  printf '  2  → %-4d │ ' "${STATS[2]:-0}"
+  printf '  3  → %-4d \n' "${STATS[3]:-0}"
+  printf '  4  → %-4d │ ' "${STATS[4]:-0}"
+  printf '  5  → %-4d │ ' "${STATS[5]:-0}"
+  printf '  6  → %-4d \n' "${STATS[6]:-0}"
 }

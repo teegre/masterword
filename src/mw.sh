@@ -21,7 +21,7 @@
 #
 # MasterWord
 # C : 2022/02/14
-# M : 2022/02/19
+# M : 2022/02/20
 # D : Main program
 
 # shellcheck source=/usr/lib/masterword/core.sh
@@ -35,10 +35,10 @@ echo "MasterWord: Now Loading..."
 
 do_wordlist
 ((COUNT="${#WORDLIST[@]}"))
-((COUNT == 0)) && { echo "!!!! No word found"; exit 1; }
-echo "---- Found $((COUNT)) words."
+((COUNT == 0)) && { echo -e "${RED}No word found!${OFF}"; exit 1; }
+echo "Found $((COUNT)) words."
 load_stats
-sleep 2
+sleep 1.5
 
 # game loop
 CONTINUE=1
@@ -48,16 +48,16 @@ while [[ $CONTINUE ]]; do
 
   L="${LANG:0:2}"
   L="${L^^}"
-  echo '|\/| _. __|_ _ ._ \    /_ .__|'
-  echo "|  |(_|_> |_(/_|   \/\/(_)|(_| $L"
+  echo ' |\/| _. __|_ _ ._ \    /_ .__|'
+  echo " |  |(_|_> |_(/_|   \/\/(_)|(_| $L"
   unset L
-  echo
+  echo "────────────────────────────────────────"
   print_stats
-  echo
-  echo -e "---- ${GRN} A ${OFF} → 👍"
-  echo -e "---- ${YLW} A ${OFF} → 🤔"
-  echo -e "---- ${DIM} A ${OFF} → 👎"
-  echo
+  echo "────────────────────────────────────────"
+  echo -e " ${GRN} A ${OFF} → 👍"
+  echo -e " ${YLW} A ${OFF} → 🤔"
+  echo -e " ${DIM} A ${OFF} → 👎"
+  echo "────────────────────────────────────────"
 
   SECRET="${WORDLIST[((RANDOM%COUNT))]}"
   TRIAL=1
@@ -65,23 +65,31 @@ while [[ $CONTINUE ]]; do
   while ((TRIAL<7)); do
     savecursor
     clrtoeol
-    read -re -p "$((TRIAL))/6> " entry
+    read -re -p "$((TRIAL))/6 → " entry
     [[ $entry ]] || { restorecursor; continue; }
     while ! check_word "$entry"; do
-      echo "!!!! Not in list"
       restorecursor
       clrtoeos
-      echo -e "---- ${RED}${entry}${OFF} | 👎"
+      echo -e "${RED}$((TRIAL))/6 → ${entry}${OFF} | 👎"
       sleep 1
       restorecursor
       clrtoeol
-      read -re -p "$((TRIAL))/6> " entry
+      read -re -p "$((TRIAL))/6 → " entry
       [[ $entry ]] || { restorecursor; continue; }
     done
     proceed_word "$entry" && {
-      echo -n "---- VICTORY in $TRIAL moves."; clrtoeol
+      echo "────────────────────────────────────────"
+      case $TRIAL in
+        1) echo -ne "${GRN} PERFECT! ${OFF}" ;;
+        2) echo -ne "${YLW} AWESOME! ${OFF}" ;;
+        3) echo -ne "${RED} GREAT! ${OFF}" ;;
+        4) echo -n " You win!" ;;
+        5) echo -n " It's a victory!" ;;
+        6) echo -n " That was close..."
+      esac
+      clrtoeol
       echo
-      confirm "Continue?" || unset CONTINUE
+      confirm " Continue?" || unset CONTINUE
       ((STATS["$TRIAL"]+=1))
       ((STATS["G"]+=1))
       ((STATS["W"]+=1))
@@ -91,14 +99,16 @@ while [[ $CONTINUE ]]; do
   done
 
   ((TRIAL==7)) && {
-    echo -n "---- $SECRET"; clrtoeol
+    echo -ne "    $RED→ $SECRET $OFF"; clrtoeol
     echo
-    echo "---- You lose..."
-    confirm "Continue?" || unset CONTINUE
+    echo "────────────────────────────────────────"
+    echo " You lose..."
+    confirm " Continue?" || unset CONTINUE
     ((STATS["G"]+=1))
     ((STATS["L"]+=1))
   }
   save_stats
 done
 
-echo "---- Game Over."
+echo "────────────────────────────────────────"
+echo " Game Over."
