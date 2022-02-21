@@ -8,7 +8,7 @@ For other languages, **MasterWord** creates a wordlist based on the default syst
 
 ## Dependencies
 
-Latest version of: bash, coreutils
+Latest version of: bash, coreutils, words.
 
 ## Install
 
@@ -22,3 +22,4 @@ Latest version of: bash, coreutils
 
 `sudo make uninstall`
 
+You may also want to remove `/home/$USER/.config/masterword` directory.
