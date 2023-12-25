@@ -21,7 +21,7 @@
 #
 # MasterWord
 # C : 2022/02/14
-# M : 2022/02/20
+# M : 2023/12/25
 # D : Main program
 
 # shellcheck source=/usr/lib/masterword/core.sh
@@ -54,9 +54,9 @@ while [[ $CONTINUE ]]; do
   echo "────────────────────────────────────────"
   print_stats
   echo "────────────────────────────────────────"
-  echo -e " ${GRN} A ${OFF} → 👍"
-  echo -e " ${YLW} A ${OFF} → 🤔"
-  echo -e " ${DIM} A ${OFF} → 👎"
+  echo -e " ${GRN} A ${OFF} → !"
+  echo -e " ${YLW} A ${OFF} → ?"
+  echo -e " ${DIM} A ${OFF} → x"
   echo "────────────────────────────────────────"
 
   SECRET="${WORDLIST[((RANDOM%COUNT))]}"
